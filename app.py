@@ -20,7 +20,7 @@ def perform_query():
     cnd_2 = request.args.get('cnd_2')
     val_2 = request.args.get('val_2')
     file_name = request.args.get('file_name')
-    if not (cnd_1 and val_1 and file_name):
+    if not (cnd_1 and file_name):
         abort(400)
     file_path = os.path.join(DATA_DIR, file_name)
     if not os.path.exists(file_path):
@@ -29,12 +29,11 @@ def perform_query():
         return abort(400)
     with open(file_path) as file:
         res = make_query(cnd_1, val_1, file)
-        if cnd_2 and val_2:
+        if cnd_2:
             if cnd_2 not in ["filter", "map", "unique", 'sort', "limit"]:
                 return abort(400)
             res = make_query(cnd_2, val_2, res)
-        if not res[:5] == "Wrong":
-            res = "\n".join(res)
+        res = "\n".join(res)
     return app.response_class(res, content_type="text/plain")
 
 

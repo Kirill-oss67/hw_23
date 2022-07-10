@@ -2,9 +2,12 @@ from flask_restx import abort
 
 
 def make_query(cnd, val, file_list):
-    if cnd == "filter":
-        res = filter(lambda x: val in x, file_list)
-        return res
+    try:
+        if cnd == "filter":
+            res = filter(lambda x: val in x, file_list)
+            return res
+    except:
+        return abort(400)
     if cnd == "map":
         try:
             val = int(val)
